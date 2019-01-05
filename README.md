@@ -1,5 +1,5 @@
 # UrlMonitor
-Simple long time Monitor for a http-url, logging status into a logfile with timestamps.
+Simple java tool for monitoring a http(s)-url, checking status or regular expression. Logging status with timestamps.
 
 usage: java -jar urlMonitor.jar \<http-url\> [\<logfile\> \<loop-delay-seconds\> \<timeout-seconds\> \<regex-check\>\]
 
