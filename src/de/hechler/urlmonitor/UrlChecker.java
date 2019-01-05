@@ -17,10 +17,15 @@ public class UrlChecker {
 	public UrlChecker(String httpUrl, int timeoutMillis) {
 		this.httpUrl = httpUrl;
 		this.timeoutMillis = timeoutMillis;
+		this.lastStatus = 0;
+		this.lastContent = "";
 	}
 	
 	public boolean check() {
 		try {
+			lastStatus = 0;
+			lastContent = "";
+			
 			URL url = new URL(httpUrl);
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET");
@@ -58,6 +63,10 @@ public class UrlChecker {
 
 	public String getLastContent() {
 		return lastContent;
+	}
+	
+	public String getResult() {
+		return "STATUS="+getLastStatus()+" "+getLastContent();
 	}
 	
 	

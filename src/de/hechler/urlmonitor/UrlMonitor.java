@@ -8,13 +8,15 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.PatternSyntaxException;
 
 public class UrlMonitor {
 
 	private static String httpUrl = "?";
 	private static String logfileName = "urlmonitor.log";
-	private static int timeoutMillis = 15000;
 	private static int loopDelayMillis = 15000;
+	private static int timeoutMillis = 15000;
+	private static String regex = "STATUS=200";
 
 	private Path logPath;
 	private StringBuilder line = new StringBuilder();
@@ -38,28 +40,50 @@ public class UrlMonitor {
 					return;
 				}
 			} catch (NumberFormatException e) {
-				usage("invalid int for loop delay seconds");
+				usage("invalid int '"+args[2]+"' for loop delay seconds");
 				return;
 			}
 		}
 		if (args.length > 3) {
 			try {
-				timeoutMillis = Integer.parseInt(args[2])*1000;
+				timeoutMillis = Integer.parseInt(args[3])*1000;
 			} catch (NumberFormatException e) {
-				usage("invalid int for timeout seconds");
+				usage("invalid int '"+args[3]+"' for timeout seconds");
 				return;
 			}
 		}
 		if (args.length > 4) {
-			logfileName = args[1];
+			regex = args[4];
+			try {
+				"".matches(regex);
+			}
+			catch (PatternSyntaxException e) {
+				usage("invalid regular expression '"+regex+"'");
+			}
 		}
 		UrlMonitor app = new UrlMonitor();
 		app.start();
 	}
 
 	private static void usage(String msg) {
+		System.out.println();
 		System.out.println("ERROR: "+msg);
-		System.out.println("usage: urlMonitor <http-url> [<logfilename> <loop-delay-seconds> <timeout-seconds>]");
+		System.out.println();
+		System.out.println("usage: urlMonitor <http-url> [<logfilename> <loop-delay-seconds> <timeout-seconds> <regex-check>]");
+		System.out.println("  http-url: the url you want to monitor. Mandatory,");
+		System.out.println("            must have the scheme 'http://...' or 'https://...'");
+		System.out.println("  logfilename: name of the logfile to write to.");
+		System.out.println("            Default is 'usermonitor.log'");
+		System.out.println("  loop-delay-seconds: repeat interval of url check ni seconds.");
+		System.out.println("            Default is 15");
+		System.out.println("  timeout-seconds: timeout for establishing connection or reading content.");
+		System.out.println("            Default is 15");
+		System.out.println("  timeout-seconds: timeout for establishing connection or reading content.");
+		System.out.println("            Default is 15");
+		System.out.println("  regex-check: regular expression, to search the received status/html for.");
+		System.out.println("            Default is 'STATUS=200'.");
+		System.out.println("            The keyword 'DUMP' logs out the received status/html.");
+		System.out.println();
 	}
 
 	private void start() {
@@ -67,11 +91,12 @@ public class UrlMonitor {
 
 		logln();
 		logln("UrlMonitor");
-		logln("=========");
+		logln("==========");
 		logln("URL:     "+httpUrl);
 		logln("Log:     "+logfileName);
-		logln("timeout: "+(timeoutMillis/1000)+"s");
 		logln("delay:   "+(loopDelayMillis/1000)+"s");
+		logln("timeout: "+(timeoutMillis/1000)+"s");
+		logln("RegEx:   "+regex);
 		logln();
 		loglnWT();
 
@@ -86,7 +111,15 @@ public class UrlMonitor {
 				}
 				col += 1;
 				if (checker.check()) {
-					log(".");
+					if (regex.equals("DUMP")) {
+						loglnWT(checker.getResult());
+					}
+					else if (checker.getResult().matches(".*"+regex+".*")) {
+						log(".");
+					}
+					else {
+						log("?");
+					}
 					lastError = false;
 				}
 				else {
