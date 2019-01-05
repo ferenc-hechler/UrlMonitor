@@ -1,7 +1,7 @@
 # UrlMonitor
 Simple long time Monitor for a http-url, logging status into a logfile with timestamps.
 
-usage: java -jar urlMonitor.jar <http-url> <logfile> <loop-delay-seconds> <timeout-seconds>
+usage: java -jar urlMonitor.jar \<http-url\> [\<logfile\> \<loop-delay-seconds\> \<timeout-seconds\>]
 
 example: java -jar urlMonitor.jar http://yourserver/index.html urlmonitor.log 15 15
 
