@@ -22,10 +22,10 @@ public class UrlMonitor {
 	public static void main(String[] args) {
 		if (args.length > 0) {
 			httpUrl = args[0];
-			if (!httpUrl.contains(":")) {
-				usage("invalid http-url");
-				return;
-			}
+		}
+		if (!httpUrl.contains(":")) {
+			usage("invalid http-url");
+			return;
 		}
 		if (args.length > 1) {
 			logfileName = args[1];
