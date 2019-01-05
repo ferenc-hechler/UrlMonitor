@@ -5,7 +5,7 @@ usage: java -jar urlMonitor.jar <http-url> <logfile> <loop-delay-seconds> <timeo
 example: java -jar urlMonitor.jar http://yourserver/index.html urlmonitor.log 15 15
 
 example for the logfile output:
-
+```
 [----- urlmonitor.log -----]
 URL:     http://yoursite/index.html
 Log:     urlmonitor.log
@@ -34,5 +34,5 @@ delay:   15s
 T stands for Timeout
 H stand for Host not found
 X stands for connect error
-
+```
  
