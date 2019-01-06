@@ -144,12 +144,32 @@ public class UrlMonitor {
 							log("]");
 						}
 					}
-					else if (checker.getLastContent().contains("Network is unreachable: connect")) {
+					else if (checker.getLastContent().contains("java.net.SocketException: Network is unreachable: connect")) {
 						if (lastError) {
 							log("X");
 						}
 						else {
 							log("X[");
+							log(now());
+							log("]");
+						}
+					}
+					else if (checker.getLastContent().contains("java.net.SocketException: Connection reset")) {
+						if (lastError) {
+							log("R");
+						}
+						else {
+							log("R[");
+							log(now());
+							log("]");
+						}
+					}
+					else if (checker.getLastStatus() == 404) {
+						if (lastError) {
+							log("4");
+						}
+						else {
+							log("4[");
 							log(now());
 							log("]");
 						}

@@ -39,6 +39,9 @@ RegEx:   STATUS=200
 T stands for SocketTimeoutException
 H stand for UnknownHostException
 X stands for "Network is unreachable: connect" error message
+4 stands for Status 404
+R stands for "Connection reset" error message
+
 ? stands for regex not matching
 ```
 
